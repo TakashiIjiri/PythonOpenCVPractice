@@ -1,16 +1,18 @@
 # coding: utf-8
+# カラー画像からR/G/Bチャンネルを取り出す
 
 import numpy as np
 import cv2
 
-
 # 画像をnp.arrayとして読み込む
-img = cv2.imread('lenaColCd.png')
+img = cv2.imread("img/lenaColCd.png")
+
+print( img.shape )
 
 # np.uing8型のnp.arrayを作成する
-imgR = np.zeros( (img.shape[0],img.shape[1]), np.uint8 )
-imgG = np.zeros( (img.shape[0],img.shape[1]), np.uint8 )
-imgB = np.zeros( (img.shape[0],img.shape[1]), np.uint8 )
+imgR = np.zeros( (img.shape[0], img.shape[1]), np.uint8 )
+imgG = np.zeros( (img.shape[0], img.shape[1]), np.uint8 )
+imgB = np.zeros( (img.shape[0], img.shape[1]), np.uint8 )
 
 #RGB画像を抽出
 for v in range(img.shape[0]) :
