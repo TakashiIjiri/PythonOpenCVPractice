@@ -1,13 +1,19 @@
 # coding: UTF-8
+
+# フーリエ変換のデモ
+# 画像Iを読み込み、そのフーリエ変換Fを得る
+# "mask"ウインドウ -- ユーザはマスクをペイントできる
+# "idft"ウインドウ -- ユーザが塗った部分のみを利用してFに逆フーリエ変換を適用
+# "wave"ウインドウ -- 現在のマウス位置に対応する2次元waveを表示 
+
 import cv2
 import numpy as np
 import pylab as plt
 
 
-
 def update_mask(x,y) : 
     global img_dft,img_idft,img_mask,img_viz, img_wave, drawing
-    img_mask[y-5:y+5,x-5:x+5,:] = 1.
+    img_mask[y-3:y+3,x-3:x+3,:] = 1.
     img_viz  = img_dft * img_mask 
     img_idft = cv2.idft(np.fft.ifftshift(img_viz), flags=cv2.DFT_SCALE )
 
@@ -33,7 +39,7 @@ def mouse_listener(event,x,y,flags,param):
 
 SCALE = 3
 
-img       = cv2.cvtColor( cv2.imread("lenaColCdsml.png"), cv2.COLOR_BGR2GRAY )
+img       = cv2.cvtColor( cv2.imread("imgs/lenaColCdsml.png"), cv2.COLOR_BGR2GRAY )
 img_dft   = cv2.dft(np.float32(img),flags = cv2.DFT_COMPLEX_OUTPUT)
 img_dft   = np.fft.fftshift(img_dft)
 

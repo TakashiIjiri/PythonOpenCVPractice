@@ -1,11 +1,16 @@
 # coding: utf-8
+# python OpenCV 環境における画像データの扱い方の練習
+# カラー画像からR/G/Bチャンネルを取り出す
+
+# [:,:,2]というインデックスを指定すると
+# 3次元目のインデックスが[2]の2次元配列を取り出せる
 
 import numpy as np
 import cv2
 
 
 # 画像をnp.arrayとして読み込む
-img = cv2.imread('lenaColCd.png')
+img = cv2.imread("imgs/lenaColCd.png")
 
 # 画像の各チャンネルを取得
 

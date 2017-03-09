@@ -1,11 +1,13 @@
 # coding: utf-8
-
+# python OpenCV 環境における画像データの扱い方の練習
+# カラー画像からR/G/Bチャンネルを取り出す
+# cv2.split 関数利用
 import numpy as np
 import cv2
 
 
 # 画像をnp.arrayとして読み込む
-img = cv2.imread('lenaColCd.png')
+img = cv2.imread("imgs/lenaColCd.png")
 
 # 画像の各チャンネルを取得
 img_rgb = cv2.split(img);

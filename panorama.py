@@ -1,4 +1,6 @@
 # coding: UTF-8
+#複数枚の画像を読み込みパノラマ合成を行う
+
 
 # 参考にしたweb page
 # http://qiita.com/bohemian916/items/4d3cf6506ec7d8f628f3
@@ -111,14 +113,15 @@ def panorama(img1, img2) :
 
 
 #main
-I1 = cv2.imread("pano1.JPG")
-I2 = cv2.imread("pano2.JPG")
-I3 = cv2.imread("pano3.JPG")
-I4 = cv2.imread("pano4.JPG")
+I1 = cv2.imread("imgs/pano1.JPG")
+I2 = cv2.imread("imgs/pano2.JPG")
+I3 = cv2.imread("imgs/pano3.JPG")
+I4 = cv2.imread("imgs/pano4.JPG")
 
 res = panorama( I1, I2)
 res = panorama(res, I3)
 res = panorama(res, I4)
+cv2.imwrite("panoramaRes.png", res)
 cv2.imshow("result", res) 
 cv2.waitKey(0)
 

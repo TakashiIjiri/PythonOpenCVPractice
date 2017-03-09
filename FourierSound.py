@@ -1,6 +1,9 @@
 #coding:utf-8
-#original file is by Hidetomo Kataoka at Ritsumeikan U.
-#modified by Takashi Ijiri
+#片岡秀公AT立命館大が書いたコードを井尻が修正したもの
+
+#音データを読み込み、
+#フーリエ変換して
+#そのデータをグラフとして表示
 
 __author__ = 'HidetomoKataokaAtRistumeikanUniversity'
 
@@ -20,7 +23,6 @@ import pylab as plt
 # load wave and extract right ch
 def wave_load( f_path ):
 
-    #load wave
     wf         =   wave_loader.open( f_path, "r")
     ch_N       =   wf.getnchannels()
     sample_N   =   wf.getnframes()
@@ -57,52 +59,44 @@ def genTimeArrayForWave( data, framerate):
 
 if __name__ == "__main__":
 
-    #load wave
-    wave,framerate = wave_load( "apple-004.wav" )
+    #音データの読み込み （ハン窓を掛ける）
+    wave,framerate = wave_load( "imgs/apple-004.wav" )
     #hammingWindow = np.hamming(len(wave))
     #wave = wave * hammingWindow
 
-    #gen time array (グラフの横軸)
-    times = genTimeArrayForWave( wave, framerate)
+    #グラフの横軸作成
+    x_times    = genTimeArrayForWave( wave, framerate)
+    x_waveCoef = np.arange(0,len(wave),1)
     
-    # calc fft 
-    wave_fft  = np.fft.fft(wave, len(wave))
-    wave_spec = np.abs( wave_fft )
-    wave_coef = np.arange(0,len(wave),1)
-
+    # FFT 
+    wave_fft = np.fft.fft(wave, len(wave))
     wave_fft = np.fft.fftshift( wave_fft )
 
-
-    #plot
-    plt.figure(1)
-    plt.plot(times, wave    )
-    plt.savefig("1.png")
-
-    plt.figure(2)
-    plt.plot(wave_coef, wave_fft )
-    plt.savefig("2.png")
-
-    
-    #lowpass
+    #mult lowpass mask to FFT data
     wave_fft_mask = np.zeros(wave_fft.shape,dtype=complex)
     K = int(len(wave_fft)/2 )
     for i in range(K-500, K + 500) : 
         wave_fft_mask[i] = wave_fft[i]
 
 
+    #plot original sound data
+    plt.figure(1)
+    plt.plot(x_times, wave    )
+    plt.savefig("1.png")
+
+    #plot FFT data
+    plt.figure(2)
+    plt.plot(x_waveCoef, wave_fft )
+    plt.savefig("2.png")
+
+    #plot masked FFT data
     plt.figure(3)
-    plt.plot(wave_coef, wave_fft_mask  )
+    plt.plot(x_waveCoef, wave_fft_mask  )
     plt.savefig("3.png")
 
+    #plot IFFT(masked FFT data)
     plt.figure(4)
-    plt.plot(wave_coef, np.fft.ifft( np.fft.fftshift( wave_fft_mask )  ) )
+    plt.plot(x_waveCoef, np.fft.ifft( np.fft.fftshift( wave_fft_mask )  ) )
     plt.savefig("4.png")
 
-
     plt.show()
-
-    #print("fscale_length : spec_length" , len(fscale),len(spec))
-
-    #plt.plot(fscale,spec)
-    #plt.show()
-
