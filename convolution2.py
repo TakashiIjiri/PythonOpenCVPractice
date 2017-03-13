@@ -9,24 +9,18 @@ import itertools
 
 #自作convolution (OpenCVの関数を利用しない)
 def myConvolve(srcImg, filter) : 
-
     H = srcImg.shape[0]
     W = srcImg.shape[1]
-    trgtImg = np.zeros(srcImg.shape)
-    
     R = int(filter.shape[0] / 2)
-
-    print(R)
-
+    trgtImg = np.zeros(srcImg.shape)
+        
     for v, u in itertools.product(range(1,H-1),range(1,W-1)):
         pix = 0.
         for vv, uu in itertools.product(range(-R,R+1),range(-R,R+1)) : 
             pix += filter[R + vv][R + uu] * srcImg[v+vv][u+uu]
-
         trgtImg[v][u] = min(255,max(0,abs(pix)))
-            
+       
     return np.uint8(trgtImg)
-
 
 #参考URL
 #http://labs.eecs.tottori-u.ac.jp/sd/Member/oyamada/OpenCV/html/py_tutorials/py_imgproc/py_filtering/py_filtering.html
