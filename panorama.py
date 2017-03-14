@@ -16,11 +16,11 @@ import cv2
 import scipy as sp
 import numpy as np
 import random
-  
+
 
 VIS_FOR_DEBUG = True
 
-def visKeyPoints(img1, points1) : 
+def visKeyPoints(img1, points1) :
     tmp = np.zeros(img1.shape)
     tmp = img1
     vis = cv2.merge((tmp, tmp, tmp))
@@ -45,7 +45,7 @@ def visMatching(img1, img2, points1, points2) :
 
     for i in range(len(points1)):
 
-        if( i % 2 != 0) : 
+        if( i % 2 != 0) :
             continue
 
         color = (random.uniform(1,255), random.uniform(1,255), random.uniform(1,255))
@@ -54,25 +54,25 @@ def visMatching(img1, img2, points1, points2) :
         cv2.line(visImg, p1, p2, color)
 
     return visImg
- 
+
 
 
 #周囲に背景画素があれば背景扱い
 def isFore(img, j,i):
     if( i==0 or j==0 or j==img.shape[0]-1 or i==img.shape[1]-1) :
         return False
-    return img[j,i,0] and img[j+1,i,0] and img[j,i+1,0] and img[j-1,i,0] and img[j,i-1,0]  
-           
+    return img[j,i,0] and img[j+1,i,0] and img[j,i+1,0] and img[j-1,i,0] and img[j,i-1,0]
 
-# Mat2 : Homography mat for warping img2 
-def margeImages( img1, img2, Mat2) : 
-    
-    #原点が左上に位置するように平行移動 (画像左下を考慮できていない) 
+
+# Mat2 : Homography mat for warping img2
+def margeImages( img1, img2, Mat2) :
+
+    #原点が左上に位置するように平行移動 (画像左下を考慮できていない)
     TransMat = np.identity(3)
     if( Mat2[0,2] < 0 ): TransMat[0,2] = -Mat2[0,2]
     if( Mat2[1,2] < 0 ): TransMat[1,2] = -Mat2[1,2]
-    Mat2 = TransMat.dot( Mat2 ) 
-    
+    Mat2 = TransMat.dot( Mat2 )
+
     #変形を考慮して画像サイズを決定
     H1, W1 = img1.shape[:2]
     H2, W2 = img2.shape[:2]
@@ -84,20 +84,20 @@ def margeImages( img1, img2, Mat2) :
     warp1 = cv2.warpPerspective(img1,TransMat,(W,H))
     warp2 = cv2.warpPerspective(img2,Mat2    ,(W,H))
     output= np.array(warp1)
- 
+
     # warp1 <-- warp2
     for i in range(W):
         for j in range(H):
-            if  ( isFore(warp1,j,i) and isFore(warp2,j,i) ) : output[j,i] = (warp1[j,i]/ 2 + warp2[j,i]/ 2) 
+            if  ( isFore(warp1,j,i) and isFore(warp2,j,i) ) : output[j,i] = (warp1[j,i]/ 2 + warp2[j,i]/ 2)
             elif( isFore(warp1,j,i)                       ) : output[j,i] =  warp1[j,i]
             elif( isFore(warp2,j,i)                       ) : output[j,i] =  warp2[j,i]
-    
+
     return warp1, warp2, output
 
 
 
 
-def calc_macheing_mat(grayImg1, grayImg2) : 
+def calc_macheing_mat(grayImg1, grayImg2) :
 
     #key point detection keyPt:点配列, des:特徴ベクトル配列
     #detector = cv2.xfeatures2d.SURF_create()
@@ -107,7 +107,7 @@ def calc_macheing_mat(grayImg1, grayImg2) :
     keyPt2, des2 = detector.detectAndCompute(grayImg2, None)
     print("feature points computed", des1.shape, len(keyPt1))
 
- 
+
     #matching key points --> trimming
     matches       = cv2.BFMatcher( cv2.NORM_L2 ).match(des1, des2)
     threshold     = np.array([m.distance for m in matches]).mean() * 0.8
@@ -117,7 +117,7 @@ def calc_macheing_mat(grayImg1, grayImg2) :
     #compute 変換行列
     point1 = np.array( [ np.array(keyPt1[m.queryIdx].pt) for m in matches_trim  ])
     point2 = np.array( [ np.array(keyPt2[m.trainIdx].pt) for m in matches_trim  ])
-    
+
     if( VIS_FOR_DEBUG ) :
         ptimg1  = visKeyPoints(grayImg1, point1)
         ptimg2  = visKeyPoints(grayImg2, point2)
@@ -130,7 +130,7 @@ def calc_macheing_mat(grayImg1, grayImg2) :
     return H
 
 
-def panorama(img1, img2) : 
+def panorama(img1, img2) :
     gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
     gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
@@ -140,9 +140,9 @@ def panorama(img1, img2) :
 
 
     if( VIS_FOR_DEBUG ) :
-        cv2.imshow("1", warp1) 
-        cv2.imshow("2", warp2) 
-        cv2.imshow("3", res  ) 
+        cv2.imshow("1", warp1)
+        cv2.imshow("2", warp2)
+        cv2.imshow("3", res  )
         cv2.waitKey(0)
 
     return res
@@ -159,9 +159,5 @@ res = panorama( I1, I2)
 res = panorama(res, I3)
 res = panorama(res, I4)
 cv2.imwrite("panoramaRes.png", res)
-cv2.imshow("result", res) 
+cv2.imshow("result", res)
 cv2.waitKey(0)
-
-
-
-

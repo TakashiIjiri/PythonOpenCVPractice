@@ -12,8 +12,8 @@ img = cv2.imread("imgs/lenaColCd.png")
 img = cv2.cvtColor( img, cv2.COLOR_BGR2GRAY )
 
 filter_smooth = np.array( [[ 1, 1, 1],[ 1,1,1],[ 1,1,1]])/9.0
-filter_sobelV = np.array( [[-1,-2,-1],[ 0,0,0],[ 1,2,1]]) 
-filter_sobelH = np.array( [[-1, 0, 1],[-2,0,2],[-1,0,1]]) 
+filter_sobelV = np.array( [[-1,-2,-1],[ 0,0,0],[ 1,2,1]])
+filter_sobelH = np.array( [[-1, 0, 1],[-2,0,2],[-1,0,1]])
 
 img_smooth = cv2.filter2D( img, -1, filter_smooth)
 img_sobelV = cv2.filter2D( img, -1, filter_sobelV)
