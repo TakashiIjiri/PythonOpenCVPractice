@@ -28,14 +28,14 @@ for y in range(N) :
         X[y,x] = xp 
         Y[y,x] = yp
         #simple gaussian
-        #Z[y,x] = c * np.exp( -(xp*xp + yp*yp) / (2*s*s) )
+        Z[y,x] = c * np.exp( -(xp*xp + yp*yp) / (2*s*s) )
 
         #sinc function
-        sincx = 1
-        sincy = 1
-        if( xp != 0 ) : sincx = np.sin( np.pi * xp  ) / (np.pi * xp)  
-        if( yp != 0 ) : sincy = np.sin( np.pi * yp  ) / (np.pi * yp)   
-        Z[y,x] = c * sincx * sincy 
+        #sincx = 1
+        #sincy = 1
+        #if( xp != 0 ) : sincx = np.sin( np.pi * xp  ) / (np.pi * xp)  
+        #if( yp != 0 ) : sincy = np.sin( np.pi * yp  ) / (np.pi * yp)   
+        #Z[y,x] = c * sincx * sincy 
 
 maxV = np.max(Z)
 img = Z / maxV

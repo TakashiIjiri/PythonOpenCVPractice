@@ -29,7 +29,7 @@ N = 300
 s = 1.0
 c = 1 / (np.sqrt(2*np.pi) * s * s)
 
-xAxis  = [-5.0 + 10.0 * i / N for i in range(N)]
+xAxis  = [-4.0 + 8.0 * i / N for i in range(N)]
 chart  = [ c * np.exp( - xAxis[i] * xAxis[i] / (2*s*s) ) for i in range(N)]
 
 
