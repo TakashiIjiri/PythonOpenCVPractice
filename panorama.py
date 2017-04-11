@@ -1,14 +1,10 @@
 # coding: UTF-8
 #複数枚の画像を読み込みパノラマ合成を行う
-
-
-# 参考にしたweb page
+# 参考 page
 # http://qiita.com/bohemian916/items/4d3cf6506ec7d8f628f3
 # http://authorunknown408.blog.fc2.com/blog-entry-38.html
-
 #findHomography
 #http://opencv.jp/opencv-2svn/cpp/camera_calibration_and_3d_reconstruction.html#cv-findhomography
-
 #python % opencv3 で siftやsurfを使うには cv2.xfeatures2d.SIFT_create()とする
 #http://www.pyimagesearch.com/2015/07/16/where-did-sift-and-surf-go-in-opencv-3/
 
@@ -16,7 +12,6 @@ import cv2
 import scipy as sp
 import numpy as np
 import random
-
 
 VIS_FOR_DEBUG = True
 
@@ -44,10 +39,8 @@ def visMatching(img1, img2, points1, points2) :
     visImg = cv2.merge((gray, gray, gray))
 
     for i in range(len(points1)):
-
         if( i % 2 != 0) :
             continue
-
         color = (random.uniform(1,255), random.uniform(1,255), random.uniform(1,255))
         p1 = ( int(points1[i][0]     ), int(points1[i][1] ) )
         p2 = ( int(points2[i][0] + W1), int(points2[i][1] ) )

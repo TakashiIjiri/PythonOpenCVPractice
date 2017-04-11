@@ -1,13 +1,11 @@
 # coding: utf-8
 # 画像に 3x3フィルタを掛ける（自作関数を利用)
-
+#自作convolution (OpenCVの関数を利用しないので遅い)
 
 import numpy as np
 import cv2
 import itertools
 
-
-#自作convolution (OpenCVの関数を利用しない)
 def myConvolve(srcImg, filter) :
     H = srcImg.shape[0]
     W = srcImg.shape[1]
@@ -22,11 +20,8 @@ def myConvolve(srcImg, filter) :
 
     return np.uint8(trgtImg)
 
-#参考URL
-#http://labs.eecs.tottori-u.ac.jp/sd/Member/oyamada/OpenCV/html/py_tutorials/py_imgproc/py_filtering/py_filtering.html
-
-#画像をnp.arrayとして読み込む
-img = cv2.imread("imgs/lenaColCd.png")
+#グレースケール画像の読み込み
+img = cv2.imread  ("imgs/lena.png")
 img = cv2.cvtColor( img, cv2.COLOR_BGR2GRAY )
 
 filter_smooth = np.array( [[ 1,  1,  1 ],[ 1.,1.,1.],[ 1.,1.,1.]])/9.0
@@ -41,6 +36,4 @@ cv2.imshow("original  ", img        )
 cv2.imshow("img_smooth", img_smooth )
 cv2.imshow("img_sovelV", img_sobelV )
 cv2.imshow("img_sovelH", img_sobelH )
-
-# wait key input
 cv2.waitKey(0)

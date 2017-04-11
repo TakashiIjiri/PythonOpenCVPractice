@@ -4,9 +4,10 @@
 import numpy as np
 import pylab as plt
 import cv2
-import itertools
+
 #画像読み込み & グレースケール化
-img     = cv2.imread("imgs/sample.png") 
+#img_gry = cv2.imread("imgs/sample.png", 0) #変換結果が汚い
+img = cv2.imread("imgs/sample.png")
 img_gry = cv2.cvtColor( img, cv2.COLOR_BGR2GRAY )
 
 #histogram生成
