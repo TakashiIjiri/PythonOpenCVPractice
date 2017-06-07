@@ -1,5 +1,5 @@
 # coding: utf-8
-# 画像にテンプレートマッチングを掛ける
+# DoGの計算
 
 import numpy as np
 import cv2
@@ -10,15 +10,12 @@ k = 2
 s = 2.0
 N = 5
 
-
-
-
 def visKeyPoints(img, peakPosi, peakNega) :
     vis = cv2.merge((img, img, img))
     for p in peakPosi:
-        cv2.circle(vis, (int(p[2]), int(p[1])),p[0]*10, (255,0,0), 1)
+        cv2.circle(vis, (int(p[2]), int(p[1])), int(s * (k**p[0])), (255,0,0), 1)
     for p in peakNega:
-        cv2.circle(vis, (int(p[2]), int(p[1])),p[0]*10, (0,255,0), 1)
+        cv2.circle(vis, (int(p[2]), int(p[1])), int(s * (k**p[0])), (0,255,0), 1)
     return vis
 
 def isPeakPosi( imgs, t,y,x ) :
