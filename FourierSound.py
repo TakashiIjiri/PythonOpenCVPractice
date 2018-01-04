@@ -62,8 +62,11 @@ if __name__ == "__main__":
     plt.savefig("1.png")
 
     plt.figure(2)
+    for p in wave_fft:
+        p = p.real
     plt.plot(x_waveCoef, wave_fft )
     plt.savefig("2.png")
+    print( wave_fft)
 
     plt.figure(3)
     plt.plot(x_waveCoef, wave_fft_mask  )
