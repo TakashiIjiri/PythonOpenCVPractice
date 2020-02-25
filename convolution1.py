@@ -6,7 +6,7 @@ import numpy as np
 import cv2
 
 # 画像をグレースケールとして読み込む
-img = cv2.imread("imgs/lena.png")
+img = cv2.imread("../imgs/lena.png")
 img = cv2.cvtColor( img, cv2.COLOR_BGR2GRAY )
 
 filter_smooth = np.array( [[ 1, 1, 1],[ 1,1,1],[ 1,1,1]])/9.0
