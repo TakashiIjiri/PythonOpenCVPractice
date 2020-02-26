@@ -15,7 +15,9 @@ def visKeyPoints( baseImg, cornerImg, THRESH) :
     return vis
 
 
-img      = cv2.imread('imgs/boxBallHeart.jpg')
+
+# -- main --
+img      = cv2.imread('../imgs/boxBallHeart.jpg')
 img_gray = cv2.cvtColor( img, cv2.COLOR_BGR2GRAY )
 
 #cornerHarris( block size, sobel kernel size, k-value)

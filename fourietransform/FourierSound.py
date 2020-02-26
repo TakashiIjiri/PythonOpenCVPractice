@@ -1,5 +1,4 @@
 #coding:utf-8
-#片岡秀公AT立命館大が書いたコードを井尻が修正したもの
 import os
 import os.path
 import csv
@@ -7,9 +6,8 @@ import wave as wave_loader
 import numpy as np
 import pylab as plt
 
-
 # load wave and extract right ch
-def wave_load( f_path ):
+def load_wave( f_path ):
     wf         =   wave_loader.open( f_path, "r")
     ch_N       =   wf.getnchannels()
     sample_N   =   wf.getnframes()
@@ -37,16 +35,17 @@ def genTimeArrayForWave( data, framerate):
 
 
 if __name__ == "__main__":
-    #音データの読み込み
-    wave,framerate = wave_load( "imgs/apple-004.wav" )
+
+    #1. 音データの読み込み
+    wave, framerate = load_wave( "../imgs/apple-004.wav" )
     #hammingWindow = np.hamming(len(wave))
     #wave = wave * hammingWindow
 
     #グラフの横軸作成
     x_times    = genTimeArrayForWave( wave, framerate)
-    x_waveCoef = np.arange(0,len(wave),1)
+    x_wavecoef = np.arange(0,len(wave),1)
 
-    # FFT
+    #2. FFT
     wave_fft = np.fft.fft(wave, len(wave))
     wave_fft = np.fft.fftshift( wave_fft )
 
@@ -64,16 +63,16 @@ if __name__ == "__main__":
     plt.figure(2)
     for p in wave_fft:
         p = p.real
-    plt.plot(x_waveCoef, wave_fft )
+    plt.plot(x_wavecoef, wave_fft )
     plt.savefig("2.png")
     print( wave_fft)
 
     plt.figure(3)
-    plt.plot(x_waveCoef, wave_fft_mask  )
+    plt.plot(x_wavecoef, wave_fft_mask  )
     plt.savefig("3.png")
 
     plt.figure(4)
-    plt.plot(x_waveCoef, np.fft.ifft( np.fft.fftshift( wave_fft_mask )  ) )
+    plt.plot(x_wavecoef, np.fft.ifft( np.fft.fftshift( wave_fft_mask )  ) )
     plt.savefig("4.png")
 
     plt.show()

@@ -6,10 +6,7 @@ import math
 
 import KernelGenerator as kernel
 
-
-#自作するとおそいので　np.fft に頼る
-
-
+#自作すると遅いので　np.fft に頼る
 def export_complex_img( fname, _img) :
     img = np.copy(_img)
     img_r = np.real( img )
@@ -23,9 +20,6 @@ def export_complex_img( fname, _img) :
     cv2.imwrite(fname + "_real.png" , np.uint8( img_r ))
     cv2.imwrite(fname + "_imag.png" , np.uint8( img_i ))
     cv2.imwrite(fname + "_abso.png" , np.uint8( img_a ))
-
-
-
 
 
 

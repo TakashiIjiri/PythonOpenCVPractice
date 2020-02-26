@@ -1,21 +1,16 @@
 # coding: UTF-8
-
 import numpy as np
 import cv2
-
 from   mpl_toolkits.mplot3d import axes3d
 import matplotlib.pyplot as plt
-
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
 N = 40
 
-#X, Y, Z = axes3d.get_test_data(0.05)
-X = np.zeros((N,N))
-Y = np.zeros((N,N))
-Z = np.zeros((N,N))
+#x, y, z = axes3d.get_test_data(0.05)
+points = np.zeros((N,N,3))
 
 scale = 0.25
 s = 1.
@@ -25,27 +20,26 @@ for y in range(N) :
     for x in range(N) :
         xp = (x - N/2)* scale
         yp = (y - N/2)* scale
-        X[y,x] = xp
-        Y[y,x] = yp
-        #simple gaussian
-        #Z[y,x] = c * np.exp( -(xp*xp + yp*yp) / (2*s*s) )
+        points[y,x,0] = xp
+        points[y,x,1] = yp
 
-        Z[y,x] = - 2 * xp * xp -  yp * yp
+        #simple gaussian
+        points[y,x,2] = c * np.exp( -(xp*xp + yp*yp) / (2*s*s) )
+
+        #quad func
+        #points[y,x,2] = - 2 * xp * xp -  yp * yp
 
         #sinc function
         #sincx = 1
         #sincy = 1
         #if( xp != 0 ) : sincx = np.sin( np.pi * xp  ) / (np.pi * xp)
         #if( yp != 0 ) : sincy = np.sin( np.pi * yp  ) / (np.pi * yp)
-        #Z[y,x] = c * sincx * sincy
+        #points[y,x,2] = c * sincx * sincy
 
-maxV = np.max(Z)
-img = Z / maxV
-cv2.imwrite( "output.bmp", np.uint8(254 * img) )
+maxV = np.max(points[:,:,2])
+img = points[:,:,2] / maxV
+#cv2.imwrite( "chart3D.bmp", np.uint8(255 * img) )
 
 # Plot a basic wireframe.
-ax.plot_wireframe(X, Y, Z, rstride=1, cstride=1)
-
-
-
+ax.plot_wireframe(points[:,:,0], points[:,:,1], points[:,:,2], rstride=1, cstride=1)
 plt.show()
