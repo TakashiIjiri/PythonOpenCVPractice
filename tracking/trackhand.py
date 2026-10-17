@@ -11,6 +11,33 @@ from ultralytics import YOLO
 
 
 
+
+CONNECTIONS = [
+    (0, 1), (1, 2), (2, 3), (3, 4),
+    (0, 5), (5, 6), (6, 7), (7, 8),
+    (5, 9), (9, 10), (10, 11), (11, 12),
+    (9, 13), (13, 14), (14, 15), (15, 16),
+    (13, 17), (17, 18), (18, 19), (19, 20), (0, 17)]
+
+
+def _draw_skeleton_noscore(frame, keypoints):
+    result = frame.copy()
+
+    for points in keypoints:
+
+        for i, j in CONNECTIONS:
+            p1 = tuple(points[i].astype(int))
+            p2 = tuple(points[j].astype(int))
+            cv2.line(result, p1, p2, (0, 255, 0), 2)
+
+        for p in points:
+            cv2.circle(result, tuple(p.astype(int)), 4, (0, 0, 255), -1)
+
+    return result
+
+
+
+
 #
 # Hand Tracker (RTMlib)
 #
@@ -19,7 +46,7 @@ KPT_THRESHOLD = 0.1
 
 class HandTrackRtmlib:
 
-    def __init__(self, backend="onnxruntime", device="cpu"):
+    def __init__(self, backend="onnxruntime", device="cuda"):
         self.hand = Hand(
             backend = backend,
             device = device,
@@ -30,19 +57,9 @@ class HandTrackRtmlib:
         keypoints, scores = self.hand(frame)
         return keypoints, scores
 
-    def draw(self, frame, keypoints, scores):
-        return draw_skeleton(
-            frame.copy(),
-            keypoints,
-            scores,
-            openpose_skeleton=False,
-            kpt_thr=KPT_THRESHOLD,
-        )
-
     def track_and_draw(self, frame):
         keypoints, scores = self.track(frame)
-        result = self.draw(frame, keypoints, scores)
-        return result
+        return _draw_skeleton_noscore(frame, keypoints)
 
 
 
@@ -86,33 +103,9 @@ class HandTrackMediapipe:
         return np.array(keypoints, dtype=np.float32).reshape(-1, 21, 2)
 
 
-    def draw(self, frame, keypoints):
-
-        result = frame.copy()
-
-        connections = [
-            (0,  1), (1,  2), ( 2,  3), (3,  4),
-            (0,  5), (5,  6), ( 6,  7), (7,  8),
-            (5,  9), (9, 10), (10, 11), (11, 12),
-            (9, 13), (13,14), (14, 15), (15, 16),
-            (13,17), (17,18), (18, 19), (19, 20), (0, 17)]
-
-        for hand_points in keypoints:
-            for i, j in connections:
-                p1 = tuple(hand_points[i].astype(int))
-                p2 = tuple(hand_points[j].astype(int))
-                cv2.line(result, p1, p2, (0, 255, 0), 2)
-
-            for point in hand_points:
-                p = tuple(point.astype(int))
-                cv2.circle(result, p, 4, (0, 0, 255), -1)
-
-        return result
-
-
     def track_and_draw(self, frame):
         keypoints = self.track(frame)
-        return self.draw(frame, keypoints)
+        return _draw_skeleton_noscore(frame, keypoints)
 
 
     def close(self):
@@ -138,15 +131,12 @@ class HandTrackYolo:
 
     def track(self, frame):
 
-        result = self.tracker.predict( 
-            frame, 
-            conf = YOLO_CONFIDENCE_THRESHOLD,
-            verbose = False
-        )[0]
+        result = self.tracker.predict( frame, 
+                                       conf = YOLO_CONFIDENCE_THRESHOLD,
+                                       verbose = False)[0]
 
         if result.keypoints is None:
-            return (np.empty((0, 21, 2), dtype=np.float32),
-                    np.empty((0, 21)   , dtype=np.float32))
+            return (np.empty((0, 21, 2)), np.empty((0, 21)))
 
         keypoints = result.keypoints.xy.cpu().numpy()
 
@@ -158,36 +148,9 @@ class HandTrackYolo:
         return keypoints, scores
 
 
-    def draw(self, frame, keypoints, scores):
-
-        result = frame.copy()
-
-        connections = [
-            (0, 1), (1, 2), (2, 3), (3, 4),
-            (0, 5), (5, 6), (6, 7), (7, 8),
-            (5, 9), (9, 10), (10, 11), (11, 12),
-            (9, 13), (13, 14), (14, 15), (15, 16),
-            (13, 17), (17, 18), (18, 19), (19, 20),
-            (0, 17)
-        ]
-
-        for hand_points, hand_scores in zip(keypoints, scores):
-
-            for i, j in connections:
-                p1 = tuple(hand_points[i].astype(int))
-                p2 = tuple(hand_points[j].astype(int))
-                cv2.line(result, p1, p2, (0, 255, 0), 2)
-
-            for point in hand_points:
-                p = tuple(point.astype(int))
-                cv2.circle(result, p, 4, (0, 0, 255), -1)
-
-        return result
-
-
     def track_and_draw(self, frame):
         keypoints, scores = self.track(frame)
-        return self.draw(frame, keypoints, scores)
+        return _draw_skeleton_noscore(frame, keypoints)
 
         
 
