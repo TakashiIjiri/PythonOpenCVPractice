@@ -1,0 +1,8 @@
+﻿.venv
+*.pth
+*.pt
+*.onnx
+*.engine
+*.mp4
+*.task
+__pycache__/

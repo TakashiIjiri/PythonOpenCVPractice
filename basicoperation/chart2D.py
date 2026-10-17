@@ -30,8 +30,6 @@ plt.plot(axis, chart )
 plt.savefig("chart2D.png")
 
 
-
-
 #sinA = [0]*6
 #sinA[0] = [0.81 * np.sin(0 * 2 * np.pi * i / N ) for i in range(N) ]
 #sinA[1] = [0.81 * np.sin(1 * 2 * np.pi * i / N ) for i in range(N) ]
